@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𝐉𝐇 𝐌𝐨𝐯𝐢𝐞 𝐇𝐮𝐛 (𝐌𝐨𝐯𝐢𝐞 𝐑𝐞𝐪𝐮𝐞𝐬𝐭)!</title>
+    <style>
+        :root {
+            --glass-blur: 12px;
+            --glass-opacity: 0.2;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --glass-background: rgba(255, 255, 255, 0.7);
+            --glass-backdrop: blur(var(--glass-blur));
+            --primary: #007AFF;
+            --text-primary: #1C1C1E;
+            --text-secondary: #636366;
+            --success: #34C759;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #F5F7FA 0%, #E4E8EB 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+        
+        .glass-card {
+            background: var(--glass-background);
+            backdrop-filter: var(--glass-backdrop);
+            -webkit-backdrop-filter: var(--glass-backdrop);
+            border-radius: 24px;
+            border: var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            text-align: center;
+            color: var(--text-primary);
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 17px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.2s ease;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+        
+        select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+        }
+        
+        .radio-option {
+            flex: 1;
+        }
+        
+        .radio-option input {
+            display: none;
+        }
+        
+        .radio-option label {
+            display: block;
+            padding: 14px;
+            text-align: center;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .radio-option input:checked + label {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        button {
+            width: 100%;
+            padding: 16px;
+            font-size: 17px;
+            font-weight: 600;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        button:hover {
+            background: #0062CC;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        .telegram-icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        /* Popup Styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .popup-card {
+            background: var(--glass-background);
+            backdrop-filter: var(--glass-backdrop);
+            -webkit-backdrop-filter: var(--glass-backdrop);
+            border-radius: 24px;
+            border: var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+        }
+        
+        .popup-overlay.active .popup-card {
+            transform: scale(1);
+        }
+        
+        .popup-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .popup-icon svg {
+            width: 30px;
+            height: 30px;
+            color: white;
+        }
+        
+        .popup-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .popup-message {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+        
+        .popup-close {
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .popup-close:hover {
+            background: #0062CC;
+        }
+        
+        @media (max-width: 480px) {
+            .glass-card {
+                padding: 24px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .popup-card {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="glass-card">
+            <h1>Movie Request</h1>
+            
+            <form id="requestForm">
+                <div class="form-group">
+                    <label for="name">Name Movie/Serie/Drama:</label>
+                    <input type="text" id="name" name="name" required placeholder="Enter movie/series etc..">
+                </div>
+                
+                <div class="form-group">
+                    <label for="year">Release Year:</label>
+                    <input type="number" id="year" name="year" min="1900" max="2099" placeholder="Ex: 2025">
+                </div>
+                
+                <div class="form-group">
+                    <label>Type:</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="type-movie" name="type" value="Movie" checked>
+                            <label for="type-movie">Movie</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="type-series" name="type" value="Series">
+                            <label for="type-series">Series</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="type-other" name="type" value="Other">
+                            <label for="type-other">Other</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="language">Language:</label>
+                    <select id="language" name="language" required>
+                        <option value="" disabled selected>Select language</option>
+                        <option value="Bangla">Bangla</option>
+                        <option value="Hindi">Hindi</option>
+                        <option value="English">English</option>
+                        <option value="Bangla Dubbed">Bangla Dubbed</option>
+                        <option value="Hindi Dubbed">Hindi Dubbed</option>
+                        <option value="Dual Audio">Dual Audio</option>
+                        <option value="Tamil">Tamil</option>
+                        <option value="Others">Other's</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="additional-info">Notes:</label>
+                    <input type="text" id="additional-info" name="additional-info" placeholder="Any special requests">
+                </div>
+                
+                <button type="submit" id="submitBtn">
+                    <svg class="telegram-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.03-.09.06-.42-.08-.59s-.37-.14-.53-.08c-.23.08-3.46 2.2-4.89 3.12-.52.33-1 .5-1.48.48-.5-.02-1.45-.28-2.16-.52-.87-.3-1.56-.46-1.5-.97.03-.27.4-.55 1.1-.85 4.43-1.94 7.37-3.22 9.8-4.12.9-.34 1.72-.51 1.97-.5.41.02 1.19.25 1.46.58.27.33.26.98.24 1.01z"/>
+                    </svg>
+                    Send Request
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Popup -->
+    <div class="popup-overlay" id="successPopup">
+        <div class="popup-card">
+            <div class="popup-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </div>
+            <h3 class="popup-title">Request Submitted!</h3>
+            <p class="popup-message">Your movie request has been sent successfully. We'll notify you when it's available. <br>Thnak you!</p>
+            <button class="popup-close" id="closePopup">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const requestForm = document.getElementById('requestForm');
+        const successPopup = document.getElementById('successPopup');
+        const closePopup = document.getElementById('closePopup');
+        
+        requestForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const year = document.getElementById('year').value;
+            const type = document.querySelector('input[name="type"]:checked').value;
+            const language = document.getElementById('language').value;
+            const additionalInfo = document.getElementById('additional-info').value;
+            
+            // Format message for Telegram
+            let message = `🎬 *New Movie Request* 🎬\n\n`;
+            message += `*Title:* ${name}\n`;
+            if (year) message += `*Year:* ${year}\n`;
+            message += `*Type:* ${type}\n`;
+            message += `*Language:* ${language}\n`;
+            if (additionalInfo) message += `*Notes:* ${additionalInfo}\n`;
+            
+            // Telegram bot details
+            const botToken = '7294383441:AAHCSUHjKeSL_nL30rzIZ9RPs4fyGvpQ_Ek';
+            const chatId = '6639167178';
+            
+            // Show loading state
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerHTML = 'Sending...';
+            submitBtn.disabled = true;
+            
+            // Send to Telegram
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message,
+                    parse_mode: 'Markdown'
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Show success popup
+                successPopup.classList.add('active');
+                
+                // Reset form
+                requestForm.reset();
+                submitBtn.innerHTML = `
+                    <svg class="telegram-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.03-.09.06-.42-.08-.59s-.37-.14-.53-.08c-.23.08-3.46 2.2-4.89 3.12-.52.33-1 .5-1.48.48-.5-.02-1.45-.28-2.16-.52-.87-.3-1.56-.46-1.5-.97.03-.27.4-.55 1.1-.85 4.43-1.94 7.37-3.22 9.8-4.12.9-.34 1.72-.51 1.97-.5.41.02 1.19.25 1.46.58.27.33.26.98.24 1.01z"/>
+                    </svg>
+                    Send Request`;
+                submitBtn.disabled = false;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                submitBtn.innerHTML = '✗ Failed to Send';
+                submitBtn.style.background = '#FF3B30';
+                
+                setTimeout(() => {
+                    submitBtn.innerHTML = `
+                        <svg class="telegram-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.03-.09.06-.42-.08-.59s-.37-.14-.53-.08c-.23.08-3.46 2.2-4.89 3.12-.52.33-1 .5-1.48.48-.5-.02-1.45-.28-2.16-.52-.87-.3-1.56-.46-1.5-.97.03-.27.4-.55 1.1-.85 4.43-1.94 7.37-3.22 9.8-4.12.9-.34 1.72-.51 1.97-.5.41.02 1.19.25 1.46.58.27.33.26.98.24 1.01z"/>
+                        </svg>
+                        Send Request`;
+                    submitBtn.style.background = '';
+                    submitBtn.disabled = false;
+                }, 3000);
+            });
+        });
+        
+        // Close popup handler
+        closePopup.addEventListener('click', function() {
+            successPopup.classList.remove('active');
+        });
+    </script>
+  
+  
+  <script type='text/javascript'>
+//<![CDATA[
+var uri = window.location.toString();
+if (uri.indexOf("%3D","%3D") > 0) {
+var clean_uri = uri.substring(0, uri.indexOf("%3D"));
+window.history.replaceState({}, document.title, clean_uri);
+}
+var uri = window.location.toString();
+if (uri.indexOf("%3D%3D","%3D%3D") > 0) {
+var clean_uri = uri.substring(0, uri.indexOf("%3D%3D"));
+window.history.replaceState({}, document.title, clean_uri);
+}
+var uri = window.location.toString();
+if (uri.indexOf("&m=1","&m=1") > 0) {
+var clean_uri = uri.substring(0, uri.indexOf("&m=1"));
+window.history.replaceState({}, document.title, clean_uri);
+}
+var uri = window.location.toString();
+if (uri.indexOf("?m=1","?m=1") > 0) {
+var clean_uri = uri.substring(0, uri.indexOf("?m=1"));
+window.history.replaceState({}, document.title, clean_uri);
+}
+//]]>
+</script>
+  
+  
+</body>
+</html>
